@@ -82,9 +82,12 @@ let logWriter: Awaited<ReturnType<typeof Bun.file>> | null = null;
 async function initLogger(): Promise<void> {
 	try {
 		mkdirSync(logDir, { recursive: true });
-		console.log(`[oauth] Logs will be written to: ${logFile}`);
+		// Use direct console here since logger isn't ready yet
+		// This is a bootstrap message
+		const timestamp = new Date().toISOString();
+		await Bun.$`echo "[${timestamp}] [INFO] Logs will be written to: ${logFile}\n" >> ${logFile}`.quiet();
 	} catch (e) {
-		console.error(`[oauth] Failed to create log directory:`, e);
+		// Silent failure during init
 	}
 }
 
@@ -94,9 +97,6 @@ async function log(level: "INFO" | "ERROR" | "DEBUG", message: string, ...args: 
 		typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
 	).join(' ');
 	const logMessage = `[${timestamp}] [${level}] ${message} ${formattedArgs}\n`;
-	
-	// Always log to console
-	console.log(`[oauth] ${message}`, ...args);
 	
 	// Write to file using Bun
 	try {
