@@ -9,7 +9,10 @@
 	"scripts": {
 		"build": "bun run --filter '*' build",
 		"dev:server": "bun run --cwd packages/test-server dev",
-		"test": "bun run dev:server & sleep 2 && opencode run 'Test OAuth integration'"
+		"test": "bun run dev:server & sleep 2 && opencode run 'Test OAuth integration'",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write ."
 	},
 	"keywords": [
 		"opencode",
