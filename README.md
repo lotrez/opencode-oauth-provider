@@ -25,28 +25,6 @@ cp .opencode/plugin/oauth-provider.ts /path/to/your/project/.opencode/plugin/
 # OpenCode will auto-load it on startup
 ```
 
-**Why use `.opencode/plugin/`?**
-- ✅ Auto-loaded by OpenCode (no config needed)
-- ✅ Can be committed to Git (team-shared)
-- ✅ Fast iteration (edit and reload)
-- ✅ No npm installation required
-
-### Option 2: NPM Package (Future)
-
-```bash
-npm install -g opencode-oauth-provider
-```
-
-Then add to your `opencode.json`:
-
-```json
-{
-  "plugin": ["opencode-oauth-provider"]
-}
-```
-
-**Note:** Package not yet published to npm. Use Option 1 for now.
-
 ## Configuration
 
 Configure OAuth-protected providers in your `opencode.json`:
@@ -99,12 +77,6 @@ You can use environment variable substitution for sensitive data:
 }
 ```
 
-Then set the environment variables:
-
-```bash
-export OAUTH_CLIENT_ID="your-client-id"
-export OAUTH_CLIENT_SECRET="your-client-secret"
-```
 
 ## How It Works
 
