@@ -1,47 +1,47 @@
 {
-  "name": "opencode-oauth-provider",
-  "version": "1.0.0",
-  "description": "OpenCode plugin for OAuth 2.0 client credentials authentication with API gateways",
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun run build:types",
-    "build:types": "tsc --emitDeclarationOnly --declaration --outDir dist",
-    "prepublishOnly": "bun run build"
-  },
-  "keywords": [
-    "opencode",
-    "opencode-plugin",
-    "oauth",
-    "oauth2",
-    "client-credentials",
-    "api-gateway",
-    "kong",
-    "authentication"
-  ],
-  "author": "",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/opencode-oauth-provider.git"
-  },
-  "peerDependencies": {
-    "@opencode-ai/plugin": ">=1.0.0"
-  },
-  "devDependencies": {
-    "@opencode-ai/plugin": "^1.0.150",
-    "@types/bun": "latest",
-    "typescript": "^5.0.0"
-  }
+	"name": "opencode-oauth-provider",
+	"version": "1.0.0",
+	"description": "OpenCode plugin for OAuth 2.0 client credentials authentication with API gateways",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "bun build ./src/index.ts --outdir ./dist --target bun && bun run build:types",
+		"build:types": "tsc --emitDeclarationOnly --declaration --outDir dist",
+		"prepublishOnly": "bun run build"
+	},
+	"keywords": [
+		"opencode",
+		"opencode-plugin",
+		"oauth",
+		"oauth2",
+		"client-credentials",
+		"api-gateway",
+		"kong",
+		"authentication"
+	],
+	"author": "",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/yourusername/opencode-oauth-provider.git"
+	},
+	"peerDependencies": {
+		"@opencode-ai/plugin": ">=1.0.0"
+	},
+	"devDependencies": {
+		"@opencode-ai/plugin": "^1.0.150",
+		"@types/bun": "latest",
+		"typescript": "^5.0.0"
+	}
 }

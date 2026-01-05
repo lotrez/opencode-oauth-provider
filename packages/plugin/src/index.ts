@@ -29,8 +29,6 @@
  */
 
 import type { Plugin } from "@opencode-ai/plugin";
-import { join } from "node:path";
-import { mkdirSync } from "node:fs";
 
 export interface OAuthConfig {
 	tokenUrl: string;
@@ -60,48 +58,39 @@ interface TokenData {
 }
 
 // Token cache per provider
-const tokenCache = new Map<
-	string,
-	{ token: TokenData | null; promise: Promise<TokenData> | null }
->();
+const tokenCache = new Map<string, { token: TokenData | null; promise: Promise<TokenData> | null }>();
 
 // OAuth providers discovered from config
-const oauthProviders = new Map<
-	string,
-	{ baseURL: string; oauth: OAuthConfig }
->();
+const oauthProviders = new Map<string, { baseURL: string; oauth: OAuthConfig }>();
 
 // Original fetch reference
 const originalFetch = globalThis.fetch;
 
 // File logger setup
-const logDir = join(Bun.env.TMPDIR || "/tmp", "opencode-oauth-logs");
-const logFile = join(logDir, `oauth-${Date.now()}.log`);
-let logWriter: Awaited<ReturnType<typeof Bun.file>> | null = null;
+const logDir = `${Bun.env.TMPDIR || "/tmp"}/opencode-oauth-logs`;
+const logFile = `${logDir}/oauth-${Date.now()}.log`;
 
 async function initLogger(): Promise<void> {
 	try {
-		mkdirSync(logDir, { recursive: true });
-		// Use direct console here since logger isn't ready yet
-		// This is a bootstrap message
+		await Bun.write(`${logDir}/.init`, ""); // Creates directory recursively
 		const timestamp = new Date().toISOString();
 		await Bun.$`echo "[${timestamp}] [INFO] Logs will be written to: ${logFile}\n" >> ${logFile}`.quiet();
-	} catch (e) {
+	} catch (_e) {
 		// Silent failure during init
 	}
 }
 
 async function log(level: "INFO" | "ERROR" | "DEBUG", message: string, ...args: unknown[]): Promise<void> {
 	const timestamp = new Date().toISOString();
-	const formattedArgs = args.map(arg => 
-		typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
-	).join(' ');
+	const formattedArgs = args
+		.map((arg) => (typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)))
+		.join(" ");
 	const logMessage = `[${timestamp}] [${level}] ${message} ${formattedArgs}\n`;
-	
+
 	// Write to file using Bun
 	try {
 		await Bun.$`echo ${logMessage} >> ${logFile}`.quiet();
-	} catch (e) {
+	} catch (_e) {
 		// Silently fail file writes
 	}
 }
@@ -138,10 +127,7 @@ async function fetchToken(config: OAuthConfig): Promise<TokenData> {
 	};
 }
 
-async function getToken(
-	providerId: string,
-	config: OAuthConfig,
-): Promise<TokenData> {
+async function getToken(providerId: string, config: OAuthConfig): Promise<TokenData> {
 	const cached = tokenCache.get(providerId);
 
 	// Return valid cached token (with 60s buffer)
@@ -242,20 +228,15 @@ function stripJsonComments(content: string): string {
 }
 
 async function loadConfig(directory: string): Promise<OpenCodeConfig | null> {
-	const configPaths = [
-		join(directory, "opencode.json"),
-		join(directory, "opencode.jsonc"),
-	];
+	const configPaths = [`${directory}/opencode.json`, `${directory}/opencode.jsonc`];
 
 	for (const configPath of configPaths) {
 		const file = Bun.file(configPath);
-		
+
 		try {
 			if (await file.exists()) {
 				const content = await file.text();
-				const jsonContent = configPath.endsWith(".jsonc")
-					? stripJsonComments(content)
-					: content;
+				const jsonContent = configPath.endsWith(".jsonc") ? stripJsonComments(content) : content;
 				return JSON.parse(jsonContent);
 			}
 		} catch (e) {
@@ -269,12 +250,7 @@ function installFetchInterceptor() {
 	if (globalThis.fetch !== originalFetch) return; // Already installed
 
 	const interceptor = async (input: RequestInfo | URL, init?: RequestInit) => {
-		const url =
-			typeof input === "string"
-				? input
-				: input instanceof URL
-					? input.toString()
-					: input.url;
+		const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
 
 		// Find matching OAuth provider by baseURL
 		for (const [providerId, config] of oauthProviders) {
@@ -284,10 +260,7 @@ function installFetchInterceptor() {
 				try {
 					const token = await getToken(providerId, config.oauth);
 					const headers = new Headers(init?.headers);
-					headers.set(
-						"Authorization",
-						`${token.tokenType} ${token.accessToken}`,
-					);
+					headers.set("Authorization", `${token.tokenType} ${token.accessToken}`);
 
 					const res = await originalFetch(input, { ...init, headers });
 
@@ -296,10 +269,7 @@ function installFetchInterceptor() {
 						await log("INFO", `Got 401, refreshing token for ${providerId}`);
 						tokenCache.delete(providerId);
 						const newToken = await getToken(providerId, config.oauth);
-						headers.set(
-							"Authorization",
-							`${newToken.tokenType} ${newToken.accessToken}`,
-						);
+						headers.set("Authorization", `${newToken.tokenType} ${newToken.accessToken}`);
 						return originalFetch(input, { ...init, headers });
 					}
 
@@ -347,10 +317,7 @@ export const OAuthProviderPlugin: Plugin = async ({ directory }) => {
 	// Install fetch interceptor if we have OAuth providers
 	if (oauthProviders.size > 0) {
 		installFetchInterceptor();
-		await log(
-			"INFO",
-			`Fetch interceptor installed for ${oauthProviders.size} provider(s)`,
-		);
+		await log("INFO", `Fetch interceptor installed for ${oauthProviders.size} provider(s)`);
 	}
 
 	return {

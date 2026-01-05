@@ -1,27 +1,30 @@
 {
-  "name": "opencode-oauth-provider",
-  "version": "1.0.0",
-  "description": "OpenCode plugin to configure OAuth providers (client credentials flow) for API gateways",
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "bun run --filter '*' build",
-    "dev:server": "bun run --cwd packages/test-server dev",
-    "test": "bun run dev:server & sleep 2 && opencode run 'Test OAuth integration'"
-  },
-  "keywords": [
-    "opencode",
-    "oauth",
-    "plugin",
-    "api-gateway",
-    "kong"
-  ],
-  "author": "",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/LOTREZ/opencode-oauth-provider.git"
-  }
+	"name": "opencode-oauth-provider",
+	"version": "1.0.0",
+	"description": "OpenCode plugin to configure OAuth providers (client credentials flow) for API gateways",
+	"type": "module",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build": "bun run --filter '*' build",
+		"dev:server": "bun run --cwd packages/test-server dev",
+		"test": "bun run dev:server & sleep 2 && opencode run 'Test OAuth integration'"
+	},
+	"keywords": [
+		"opencode",
+		"oauth",
+		"plugin",
+		"api-gateway",
+		"kong"
+	],
+	"author": "",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/LOTREZ/opencode-oauth-provider.git"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.11"
+	}
 }

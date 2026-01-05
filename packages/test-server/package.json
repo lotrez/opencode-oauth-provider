@@ -1,11 +1,11 @@
 {
-  "name": "@opencode-oauth-provider/test-server",
-  "version": "1.0.0",
-  "description": "Mock OAuth + OpenAI-compatible server for testing",
-  "type": "module",
-  "main": "src/server.ts",
-  "scripts": {
-    "dev": "bun run src/server.ts",
-    "build": "echo 'No build needed for test server'"
-  }
+	"name": "@opencode-oauth-provider/test-server",
+	"version": "1.0.0",
+	"description": "Mock OAuth + OpenAI-compatible server for testing",
+	"type": "module",
+	"main": "src/server.ts",
+	"scripts": {
+		"dev": "bun run src/server.ts",
+		"build": "echo 'No build needed for test server'"
+	}
 }

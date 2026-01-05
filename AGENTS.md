@@ -65,11 +65,47 @@ curl -X POST http://localhost:8787/v1/chat/completions \
 ```typescript
 // External imports first (alphabetically)
 import type { Plugin } from "@opencode-ai/plugin"
-import { readFileSync, existsSync } from "fs"
-import { join } from "path"
 
 // Type imports use 'import type'
 import type { OAuthConfig } from "./types"
+
+// IMPORTANT: Use Bun's native APIs, NOT Node.js APIs
+// ✅ Good: Use Bun.write(), template strings for paths
+// ❌ Bad: import { mkdirSync } from "node:fs"
+// ❌ Bad: import { join } from "node:path"
+```
+
+### Using Bun APIs
+
+**Path joining:**
+```typescript
+// Use template strings instead of path.join()
+const filePath = `${directory}/opencode.json`  // Good
+const logPath = `${logDir}/oauth-${Date.now()}.log`  // Good
+
+// Avoid Node.js path module
+import { join } from "node:path"  // Bad
+```
+
+**File operations:**
+```typescript
+// Use Bun's native file APIs
+await Bun.write(filePath, content)  // Good
+const file = Bun.file(path)  // Good
+const exists = await file.exists()  // Good
+
+// Avoid Node.js fs module
+import { mkdirSync, writeFileSync } from "node:fs"  // Bad
+```
+
+**Creating directories:**
+```typescript
+// Bun.write creates parent directories automatically
+await Bun.write(`${dir}/.init`, "")  // Good
+
+// Avoid Node.js mkdir
+import { mkdir } from "node:fs/promises"  // Bad
+await mkdir(dir, { recursive: true })  // Bad
 ```
 
 ### TypeScript Configuration

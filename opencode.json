@@ -1,27 +1,27 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "oauth-test": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "OAuth Test Server",
-      "options": {
-        "baseURL": "http://localhost:8787/v1",
-        "oauth": {
-          "tokenUrl": "http://localhost:8787/oauth/token",
-          "clientId": "test-client-id",
-          "clientSecret": "test-client-secret"
-        }
-      },
-      "models": {
-        "mock-gpt-4": {
-          "name": "Mock GPT-4 (OAuth Protected)",
-          "limit": {
-            "context": 128000,
-            "output": 4096
-          }
-        }
-      }
-    }
-  },
-  "model": "oauth-test/mock-gpt-4"
+	"$schema": "https://opencode.ai/config.json",
+	"provider": {
+		"oauth-test": {
+			"npm": "@ai-sdk/openai-compatible",
+			"name": "OAuth Test Server",
+			"options": {
+				"baseURL": "http://localhost:8787/v1",
+				"oauth": {
+					"tokenUrl": "http://localhost:8787/oauth/token",
+					"clientId": "test-client-id",
+					"clientSecret": "test-client-secret"
+				}
+			},
+			"models": {
+				"mock-gpt-4": {
+					"name": "Mock GPT-4 (OAuth Protected)",
+					"limit": {
+						"context": 128000,
+						"output": 4096
+					}
+				}
+			}
+		}
+	},
+	"model": "oauth-test/mock-gpt-4"
 }
